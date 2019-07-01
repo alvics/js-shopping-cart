@@ -39,13 +39,18 @@ class Products {
 // displaying the products
 class UI {
     displayProducts(products) {
+        // set result to empty string
         let result = '';
+        // looping through array, getting the objects
         products.forEach(product => {
+            // chaining on to the result
             result += `
              <!-- single product -->
              <article class="product">
                 <div class="img-container">
-                    <img src=${product.image} />
+                    <img src=${
+                      product.image
+                    } class="product-img" alt="product" />
                     <button class="bag-btn" data-id=${product.id}>
               <i class="fas fa-shopping-cart"></i>
               add to bag
@@ -57,6 +62,7 @@ class UI {
             <!-- end of single product -->
             `;
         });
+        // calling and setting to the DOM
         productsDOM.innerHTML = result;
     }
 }
