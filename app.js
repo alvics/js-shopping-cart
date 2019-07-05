@@ -1,6 +1,6 @@
 // set variables
 const cartBtn = document.querySelector('.cart-btn');
-const closeCartBtn = document.querySelector('.close-btn');
+const closeCartBtn = document.querySelector('.close-cart');
 const clearCartBtn = document.querySelector('.clear-btn');
 const cartDOM = document.querySelector('.cart');
 const cartOverlay = document.querySelector('.cart-overlay');
@@ -47,15 +47,15 @@ class UI {
             products.forEach(product => {
                 // chaining on to the result
                 result += `
-             <!-- single product -->
-             <article class="product">
+            <!-- single product -->
+            <article class="product">
                 <div class="img-container">
                     <img src=${
                       product.image
                     } class="product-img" alt="product" />
                     <button class="bag-btn" data-id=${product.id}>
-              <i class="fas fa-shopping-cart"></i>
-              add to bag
+            <i class="fas fa-shopping-cart"></i>
+            add to bag
             </button>
                 </div>
                 <h3>${product.title}</h3>
@@ -126,7 +126,7 @@ class UI {
                     </div>
                     <div>
                         <i class="fas fa-chevron-up" data-id=${item.id}></i>
-                        <p class="item-amount" data-id=${item.id}>
+                        <p class="item-amount" data-id=${item.amount}>
                             1
                         </p>
                         <i class="fas fa-chevron-down" data-id=${item.id}></i>
@@ -137,6 +137,20 @@ class UI {
     showCart() {
         cartOverlay.classList.add('transparentBcg');
         cartDOM.classList.add('showCart');
+    }
+    setApp() {
+        cart = Storage.getCart();
+        this.setCartValues(cart);
+        this.populateCart(cart);
+        cartBtn.addEventListener('click', this.showCart);
+        closeCartBtn.addEventListener('click', this.hideCart);
+    }
+    populateCart(cart) {
+        cart.forEach(item => this.addCartItem(item));
+    }
+    hideCart() {
+        cartOverlay.classList.remove('transparentBcg');
+        cartDOM.classList.remove('showCart');
     }
 }
 
@@ -153,12 +167,19 @@ class Storage {
     static saveCart(cart) {
         localStorage.setItem('cart', JSON.stringify(cart));
     }
+    static getCart() {
+        return localStorage.getItem('cart') ?
+            JSON.parse(localStorage.getItem('cart')) :
+            [];
+    }
 }
 
 // setup DOM
 document.addEventListener('DOMContentLoaded', () => {
     const ui = new UI();
     const products = new Products();
+    // setup App
+    ui.setApp();
 
     // get all products
     products
